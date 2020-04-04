@@ -1,4 +1,4 @@
 {
   "editor.wordWrap": "on",
-  "prettier.printWidth": 130
+  "prettier.printWidth": 100
 }
