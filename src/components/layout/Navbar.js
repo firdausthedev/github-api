@@ -23,13 +23,13 @@ const Navbar = ({ icon, title }) => {
 //default props if no props are entered
 Navbar.defaultProps = {
   title: 'Github Finder',
-  icon: 'fab fa-github'
+  icon: 'fab fa-github',
 };
 
 //check and give warning to console if wrong props type are entered
 Navbar.propTypes = {
   title: PropTypes.string.isRequired,
-  icon: PropTypes.string.isRequired
+  icon: PropTypes.string.isRequired,
 };
 
 export default Navbar;
