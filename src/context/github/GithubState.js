@@ -25,6 +25,7 @@ const GithubState = (props) => {
 
     dispatch({ type: GET_USER, payload: res.data });
   };
+
   //get the text from Search.js and search on github
   const searchUsers = async (text) => {
     setLoading();
@@ -36,6 +37,15 @@ const GithubState = (props) => {
     dispatch({ type: SEARCH_USERS, payload: res.data.items });
   };
 
+  // Get user repos
+  const getUserRepos = async (username) => {
+    setLoading();
+
+    const res = await axios.get(
+      `https://api.github.com/users/${username}/repos?per_page=6&sort=created:asc&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
+    );
+    dispatch({ type: GET_REPOS, payload: res.data });
+  };
   //set loading
   const setLoading = () => dispatch({ type: SET_LOADING });
 
@@ -52,6 +62,7 @@ const GithubState = (props) => {
         searchUsers,
         clearUsers,
         getUser,
+        getUserRepos,
       }}
     >
       {props.children}

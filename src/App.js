@@ -1,68 +1,34 @@
-import React, { Fragment, useState } from 'react';
+import React from 'react';
 import './App.css';
 import Navbar from './components/layout/Navbar';
-import Users from './components/users/Users';
 import User from './components/users/User';
-import Search from './components/users/Search';
-import axios from 'axios';
 import { Alert } from './components/layout/Alert';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { About } from './components/pages/About';
 import GithubState from './context/github/GithubState';
+import AlertState from './context/alert/AlertState';
+import Home from './components/pages/Home';
+import { NotFound } from './components/pages/NotFound';
 
 const App = () => {
-  const [repos, setRepos] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [alert, setAlert] = useState(null);
-
-  // Get user repos
-  const getUserRepos = async (username) => {
-    setLoading(true);
-
-    const res = await axios.get(
-      `https://api.github.com/users/${username}/repos?per_page=6&sort=created:asc&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
-    );
-
-    setRepos(res.data);
-    setLoading(false);
-  };
-
-  //set alert
-  const showAlert = (msg, type) => {
-    //set alert state to an object with 2 attributes
-    setAlert({ msg: msg, type: type });
-
-    setTimeout(() => setAlert(null), 3000);
-  };
-
   return (
     <GithubState>
-      <Router>
-        <div className='App'>
-          <Navbar />
-          <div className='container'>
-            <Alert alert={alert} />
-            <Switch>
-              <Route
-                exact
-                path='/'
-                render={() => (
-                  <Fragment>
-                    <Search setAlert={showAlert} />
-                    <Users />
-                  </Fragment>
-                )}
-              />
-              <Route exact path='/about' component={About} />
-              <Route
-                exact
-                path='/user/:login'
-                render={(props) => <User {...props} getUserRepos={getUserRepos} repos={repos} />}
-              />
-            </Switch>
+      <AlertState>
+        <Router>
+          <div className='App'>
+            <Navbar />
+            <div className='container'>
+              <Alert alert={alert} />
+              <Switch>
+                <Route exact path='/' component={Home} />
+                <Route exact path='/about' component={About} />
+                <Route exact path='/user/:login' component={User} />
+                <Route component={NotFound} />
+              </Switch>
+            </div>
           </div>
-        </div>
-      </Router>
+        </Router>
+      </AlertState>
     </GithubState>
   );
 };
